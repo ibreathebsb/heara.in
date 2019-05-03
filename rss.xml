@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Heara.in]]></title><description><![CDATA[随便写写]]></description><link>https://heara.in</link><generator>RSS for Node</generator><lastBuildDate>Fri, 08 Mar 2019 14:05:53 GMT</lastBuildDate><item><title><![CDATA[Javascript中的prototype、class以及__proto__]]></title><description><![CDATA[谈一谈Javascript中的prototype、class以及__proto__的关系]]></description><link>https://heara.in/prototype-class-and-proto-in-javascript/</link><guid isPermaLink="false">https://heara.in/prototype-class-and-proto-in-javascript/</guid><pubDate>Sun, 02 Dec 2018 19:29:33 GMT</pubDate><content:encoded>&lt;p&gt;在ES5的时代，如果我们要实现一个类, 例如&lt;code class=&quot;language-text&quot;&gt;Dog&lt;/code&gt;,通常的写法是这样子的：&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Heara.in]]></title><description><![CDATA[随便写写]]></description><link>https://heara.in</link><generator>RSS for Node</generator><lastBuildDate>Fri, 03 May 2019 08:07:38 GMT</lastBuildDate><item><title><![CDATA[搭建Node.js本地https服务]]></title><link>https://heara.in/nodejs-localhost-https/</link><guid isPermaLink="false">https://heara.in/nodejs-localhost-https/</guid><pubDate>Fri, 03 May 2019 15:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;https相对http有着更好的安全性，越来越多的网站开始使用https服务正是出于安全方面的考虑。在我们日常开发时，有时也会需要搭建本地https服务，本文介绍采用Node.js搭建https服务的过程，希望对读者有所帮助。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;我，ca，打钱&quot;&gt;&lt;a href=&quot;#%E6%88%91%EF%BC%8Cca%EF%BC%8C%E6%89%93%E9%92%B1&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;我，CA，打钱&lt;/h2&gt;
+&lt;p&gt;相信大家对https都有一定的了解，都知道需要一个叫做&lt;code class=&quot;language-text&quot;&gt;证书&lt;/code&gt;的东西，但是这个东西是从哪来的？没错就是由&lt;code class=&quot;language-text&quot;&gt;CA（Certificate Authority）&lt;/code&gt;颁发的。证书可以看作身份证，而&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;就是派出所。我们平时在浏览器里访问的网站的证书往往是由比较知名的&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;颁发的，而且往往是需要收费的（当然也有免费的，例如&lt;code class=&quot;language-text&quot;&gt;letsencrypt&lt;/code&gt;）。那我们要搭建本地https服务的话是不是要去这些&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;申请证书呢？要是这样的话那真是太麻烦了，幸好我们可以借助&lt;code class=&quot;language-text&quot;&gt;openssl&lt;/code&gt;自己扮演&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;的角色，然后给我们的server颁发证书，很多企业的内网都是采用这种&lt;code class=&quot;language-text&quot;&gt;自签名&lt;/code&gt;证书实现https服务的。接下来我们看看如何把自己变成&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# step1: 生成CA私钥&lt;/span&gt;
+openssl genrsa -out ca.key 4096
+
+&lt;span class=&quot;token comment&quot;&gt;# step2: 生成证书签名请求&lt;/span&gt;
+openssl req -new -key ca.key -out ca.csr
+
+&lt;span class=&quot;token comment&quot;&gt;# step3: 证书签名，生成根证书&lt;/span&gt;
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;通过以上步骤我们生成了根证书&lt;code class=&quot;language-text&quot;&gt;ca.crt&lt;/code&gt;,然后我们将证书设置为始终信任&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/4e157/ca.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 83.92156862745097%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAABYlAAAWJQFJUiTwAAACNklEQVQ4y52UyY4SURSGeRwbqKKYimIoCmqimKSoYuimhB5jd+LCTgwLhURX6tqFJq7c+Bq+i0uf4vec2ymEoDSR5M+9uYHvnnP+/5K4sgz4AxmqU4TVMNFsGGgYBmzLguvYaLkORmGA6WSMTqcNh87cA0pczbv48ukdPr59AdusIwwCuuApioU8ZCkNKZ1COpXcWePzjCxBycg7Snz/+h78+fXzB/y+h9vntzhfzDGdTuDYFoy6TqsNs9mA13JhmU3otao4V4sFAckqmY0SN5GPb58/YH3fg1kvoO25omX+see1RJuubaKsqWgSlGEMqpQ10cUekEuvllUqPwNNLUArqSipRbHW9RoqWgm5gkYqIZuRRLsMidtlSNyuAOayCiTxJUlU5ZIJ1UqZTDFxeXGB0O+h5kUwvAn0Cl+8W9FehXzQptbCYChc4j3PieHPoojm2ka9fQZZNaFIyb9C9oBlaotNYAUE9gcDsV+v17i7WaAVvYGsj5CVnkBRlH/CBJBnwTMLKWuT8UhU2ut2MBqFWC6XuFqcwR7fQ64OjgPG5RfyOXTJ0WDoo9/rUpgfgJfzUwK+PB64PdxU8gQWmcGVshh4fT6De/oKcs0/Hsht53NZ4a7rOIiiGRkyw2q1wt01zXD2mmYYHg/kdjmksbvsNu+H/gAth0Ld7CNT1CmHFK8DMAFkGP8BcPrjtxqLRyDebPrkD+xAZDYVbid9Wxz6h72ygT1a4TZMeeT2Y5Q49Iz+R78BQHlB+t/8+uoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;CA证书&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/fb8a0/ca.png&quot;
+        srcset=&quot;https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/1a291/ca.png 148w,https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/2bc4a/ca.png 295w,https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/fb8a0/ca.png 590w,https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/526de/ca.png 885w,https://heara.in/static/107ae09863adc4872a5ebd9f6abd6830/4e157/ca.png 1020w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h2 id=&quot;我，server，求证&quot;&gt;&lt;a href=&quot;#%E6%88%91%EF%BC%8Cserver%EF%BC%8C%E6%B1%82%E8%AF%81&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;我，server，求证&lt;/h2&gt;
+&lt;p&gt;同过上面的步骤，我们成功的把自己变成了一个&lt;code class=&quot;language-text&quot;&gt;CA&lt;/code&gt;，接下来我们需要给自己的server申请证书&lt;/p&gt;
+&lt;h3 id=&quot;step-1-创建相关配置文件&quot;&gt;&lt;a href=&quot;#step-1-%E5%88%9B%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Step 1. 创建相关配置文件&lt;/h3&gt;
+&lt;p&gt;主要有两个配置文件&lt;code class=&quot;language-text&quot;&gt;server.csr.conf&lt;/code&gt;和 &lt;code class=&quot;language-text&quot;&gt;v3.ext&lt;/code&gt;
+其中&lt;code class=&quot;language-text&quot;&gt;server.csr.conf&lt;/code&gt;制定了server证书签名请求的相关信息比如 国家 城市 域名等信息，&lt;code class=&quot;language-text&quot;&gt;v3.ext&lt;/code&gt;主要作用是指定&lt;code class=&quot;language-text&quot;&gt;subjectAltName&lt;/code&gt;，&lt;code class=&quot;language-text&quot;&gt;subjectAltName&lt;/code&gt;的作用和&lt;code class=&quot;language-text&quot;&gt;common name&lt;/code&gt;类似，都是用于制定域名的,不过前者配置更灵活更强大&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# server.csr.conf&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# 生成证书签名请求的配置文件&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;req&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+default_bits &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; 4096
+prompt &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; no
+distinguished_name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; dn
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;dn&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+C&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;US &lt;span class=&quot;token comment&quot;&gt;# 国家&lt;/span&gt;
+ST&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;RandomState &lt;span class=&quot;token comment&quot;&gt;# 州&lt;/span&gt;
+L&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;RandomCity &lt;span class=&quot;token comment&quot;&gt;# 城市&lt;/span&gt;
+O&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;RandomOrganization &lt;span class=&quot;token comment&quot;&gt;# 组织&lt;/span&gt;
+OU&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;RandomOrganizationUnit &lt;span class=&quot;token comment&quot;&gt;# 组织单元&lt;/span&gt;
+emailAddress&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;hello@example.com &lt;span class=&quot;token comment&quot;&gt;# 邮箱&lt;/span&gt;
+CN &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; localhost &lt;span class=&quot;token comment&quot;&gt;# Common Name 域名&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# v3.ext&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# CA对server请求签名的配置&lt;/span&gt;
+authorityKeyIdentifier&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;keyid,issuer
+basicConstraints&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;CA:FALSE
+keyUsage &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; @alt_names
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;alt_names&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+DNS.1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; localhost&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;step-2-申请证书&quot;&gt;&lt;a href=&quot;#step-2-%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Step 2. 申请证书&lt;/h3&gt;
+&lt;p&gt;设置完配置文件，接下来可以给我们的服务器申请证书了&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# step1: 生成服务器的私钥&lt;/span&gt;
+openssl genrsa -out server.key 4096
+
+&lt;span class=&quot;token comment&quot;&gt;# step2: 生成证书签名请求&lt;/span&gt;
+openssl req -new -out server.csr -key server.key -config &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; server.csr.conf &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# step3: CA对csr签名&lt;/span&gt;
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt  -sha256 -days 365 -extfile v3.ext  &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;我，server，干活&quot;&gt;&lt;a href=&quot;#%E6%88%91%EF%BC%8Cserver%EF%BC%8C%E5%B9%B2%E6%B4%BB&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;我，server，干活&lt;/h2&gt;
+&lt;p&gt;经过上面的步骤，我们成功的扮演了CA并给自己的server颁发了证书，接下来就是在nodejs中配置证书&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; https &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;https&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; fs &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;fs&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; options &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  key&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;readFileSync&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;./server.key&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 私钥&lt;/span&gt;
+  cert&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; fs&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;readFileSync&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;./server.crt&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 证书&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; server &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; https&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createServer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;options&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;req&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writeHead&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;hello world\n&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+server&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后启动服务&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;node server &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;打开浏览器，看见🔒了吗？&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/f18e1/tls.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 104.74683544303798%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAYAAABG1c6oAAAACXBIWXMAABYlAAAWJQFJUiTwAAAC30lEQVQ4y5VU2XLaUAz1l6RJwQvgnRiwMTYmJizBYPYQwmSS6fT//+BUuqYpQymdPGgkX+vK50hHlqaLNV7fPpAOxxhP5wi7D+iPJxhlOWbLNZ0/odPrI04HcBs+lKoBTbegnpl2NKnd6SJOUthuA2EngUPeawZoBR0EYSy8XW/AuW+iZjqQtRqUik5WOzFdnJfVCiRFraJqWdBdB1XbglF3UbNtVEwTslyBQkkq5bBpdLFCCM9NpWK2U0cn6kKqEsx4NUB6yNDbT9DJ++huRmgOIpTLGmSlIi6wL8saSrL2GbNnY1Bc2CAGUrVmwvdDNFttBEEEz/PRoF612xF8ohtSS1yiHLQ5jhF3exRH4pzf+0GIOrXDcT3BQNING6v1FuvNDtvnF8zmKwxGGfaHd+QU81mXepxNc5GzezlgToPcbHeYzhYY0DA7USJ6zeCkGlEeP2XisstfMTyEw1f4/R1ML8HNzS1KZRV332V8uy3h9q5MJouzUqlMJhN9ldojFwi5YERfYPhJL0WL6LO1acJs3Gj2TJORtgXdGKblwG0mqLdIGR61qv1ICEk23MicKGQEn+kw2kk2w/PzXrSCbbnaYEGafD28YZYvBfVWK0A0PqCXvSN83CDNf0I364TQcNBM5oif3kguvqDAkxOUaMqFL+LvJaWYND3z5BVFhSIr5Gni8pEyj5uLcnWm/1tb3ODP+MJZYebRilgjLxWJxgXRmhdF/D8TBZkCFyxErBd0jmL9ckHW4cv+IMTLw2Ch8n536YfACfyhr5iQzQP9SUzLJXlEtJP3cKj4PW3MacHz+J8I/1AtaJ5+7TTx9PlaUaHD948fYOo+7TKv3WiSo5cOUfdaaJLIXdrVtD8kDS7EDl/rrxgKFztHei4RztENS5xfRcgJUZzAst1itWjNeg/9k4t/N/5aP8VQ8vmSfkENsWLT2Ryr1fYT9SUUVxHyS14npsqrxZpkf4rkKzr8BXFcnHpjZm+MAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;https&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/fb8a0/tls.png&quot;
+        srcset=&quot;https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/1a291/tls.png 148w,https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/2bc4a/tls.png 295w,https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/fb8a0/tls.png 590w,https://heara.in/static/749e5b9cd806cb10035c0fe5a24cd7fe/f18e1/tls.png 632w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h2 id=&quot;写在最后&quot;&gt;&lt;a href=&quot;#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;写在最后&lt;/h2&gt;
+&lt;p&gt;以上就是本地开发环境使用Node搭建https服务的流程，希望对你有所帮助&lt;/p&gt;
+&lt;h2 id=&quot;参考&quot;&gt;&lt;a href=&quot;#%E5%8F%82%E8%80%83&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;参考&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.freecodecamp.org/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec&quot; target=&quot;_blank&quot; rel=&quot;nofollow noopener noreferrer&quot;&gt;How to get HTTPS working on your local development environment in 5 minutes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html&quot; target=&quot;_blank&quot; rel=&quot;nofollow noopener noreferrer&quot;&gt;What is a CSR (Certificate Signing Request)?
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://support.dnsimple.com/articles/what-is-common-name/#common-name-vs-subject-alternative-name&quot; target=&quot;_blank&quot; rel=&quot;nofollow noopener noreferrer&quot;&gt;What is the SSL Certificate Common Name?
+&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+                &lt;div style=&quot;margin-top=55px; font-style: italic;&quot;&gt;(This is an article posted to my blog at overreacted.io. You can read it online by &lt;a href=&quot;https://heara.in/nodejs-localhost-https/&quot;&gt;clicking here&lt;/a&gt;.)&lt;/div&gt;
+              </content:encoded></item><item><title><![CDATA[Javascript中的prototype、class以及__proto__]]></title><description><![CDATA[谈一谈Javascript中的prototype、class以及__proto__的关系]]></description><link>https://heara.in/prototype-class-and-proto-in-javascript/</link><guid isPermaLink="false">https://heara.in/prototype-class-and-proto-in-javascript/</guid><pubDate>Sun, 02 Dec 2018 19:29:33 GMT</pubDate><content:encoded>&lt;p&gt;在ES5的时代，如果我们要实现一个类, 例如&lt;code class=&quot;language-text&quot;&gt;Dog&lt;/code&gt;,通常的写法是这样子的：&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; name
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
