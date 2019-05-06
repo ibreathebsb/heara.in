@@ -1,4 +1,169 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Heara.in]]></title><description><![CDATA[随便写写]]></description><link>https://heara.in</link><generator>RSS for Node</generator><lastBuildDate>Fri, 03 May 2019 08:07:38 GMT</lastBuildDate><item><title><![CDATA[搭建Node.js本地https服务]]></title><link>https://heara.in/nodejs-localhost-https/</link><guid isPermaLink="false">https://heara.in/nodejs-localhost-https/</guid><pubDate>Fri, 03 May 2019 15:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Heara.in]]></title><description><![CDATA[随便写写]]></description><link>https://heara.in</link><generator>RSS for Node</generator><lastBuildDate>Mon, 06 May 2019 16:31:16 GMT</lastBuildDate><item><title><![CDATA[flex-wrap的妙用]]></title><link>https://heara.in/a-little-trick-when-using-flex-wrap/</link><guid isPermaLink="false">https://heara.in/a-little-trick-when-using-flex-wrap/</guid><pubDate>Mon, 06 May 2019 23:28:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;最近接到一个比较棘手的布局需求，只能用flex实现，并且无法使用js计算，经过和同事们的讨论最终实现了，各位看官往下看&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;布局要求&quot;&gt;&lt;a href=&quot;#%E5%B8%83%E5%B1%80%E8%A6%81%E6%B1%82&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;布局要求&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt; &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt; &lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;单行布局，&lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;的宽度固定，&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;、&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;宽度可变&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/303b3/1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 26.158940397350992%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAABHUlEQVQY022OUSuDcRSH/3IhN274ApLIaqFcyY3vxfgAmLYxy7utRDHpbTUXy8XaXtnCtmhRMzMxI41thVCP874bSS6e+j2/c04d1ajX2TOSRIwjdoWokSKaSP34f0R+7TW7Y6LxA56qVdRz+YoJl4FaeRNeGHCfYnNnUT7Ta0L9D9L5Xun35LC70lY2GV5McnuZRzUqJSa1E9o2oWsbhgLXjASLqA1oXwe1Bt0h6Ak1s9UJtuANo/4LOqXv2IKx1TPuSwVUTT4cXzpE+WUxAH3ePIPe86Zr78Kn5BZm1j6sWa+3gG05Z92Y2N0ZykX5sFZ9xKPHmApncYQzzOsGC3qCafHZcNpipsW3O2Q2p+/j1OPWnunOnRgPlTu+AJdOItDbZVHUAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;1&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/fb8a0/1.png&quot;
+        srcset=&quot;https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/1a291/1.png 148w,https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/2bc4a/1.png 295w,https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/fb8a0/1.png 590w,https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/526de/1.png 885w,https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/fa2eb/1.png 1180w,https://heara.in/static/10600a872a0afbd5f6c629514f8683c5/303b3/1.png 1208w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;当宽度不够时，不显示&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/f2718caeb50530df93ac33e3e606119b/e57a0/2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 27.768595041322314%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABUUlEQVQY012NO0tCYRyHXyuXEqILfZUgKyiIItqa/ATV0NzaVkNDQ3UUj6jZBbpROJRLmN3U9FCmRa2liNcukFDQ03uOncXh4Xfj/b/iJqkRjiY4jyWJSC6jcakJzv6zqY0+It9cxxNEk7fEJFc3GnepFGJKCSJWywiljFUpMLocom0th0Wp0KyUaJGItTq61zuLs4pt5QWH65Qu3zs2tUq7WmZxO4SYXQ8jAtCzB9YNmFBjtAZ+ENI3SfStexc6dure6DbB5q/hCGhYt6Hzf1s6vERM++RBP1i2ZLkOI664zL+GNzC3zbo3Ov2w95tJv2Z8bG4LBxeIee8Rve40fWqGQfWeGWeQIfUWuydDvyfNgEff6uhZx+55YNitMec7ZmLrmbGNJ8YDj7j2TxDVUpGPwiufhazULNVC3lAzm74x6/pWzFMr5aiVc3xJfauU+AOYZGMGMR6IUgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/f2718caeb50530df93ac33e3e606119b/fb8a0/2.png&quot;
+        srcset=&quot;https://heara.in/static/f2718caeb50530df93ac33e3e606119b/1a291/2.png 148w,https://heara.in/static/f2718caeb50530df93ac33e3e606119b/2bc4a/2.png 295w,https://heara.in/static/f2718caeb50530df93ac33e3e606119b/fb8a0/2.png 590w,https://heara.in/static/f2718caeb50530df93ac33e3e606119b/526de/2.png 885w,https://heara.in/static/f2718caeb50530df93ac33e3e606119b/fa2eb/2.png 1180w,https://heara.in/static/f2718caeb50530df93ac33e3e606119b/e57a0/2.png 1210w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;若B的内容宽度过长，最大伸长到容器右边&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/7bc9a/3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 27.334465195246178%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAABEUlEQVQY02WMzS4DYRhGP4qKstDEohsrEhdga+EaVFnY9g7cBgtBp5NKOj9+EnEBIhaSajvTzkxnKkjoUkuHJq7gGDOaGBYned7zvHlEt9fj1mxiOB5128W0HAyrFeYYlovxK8d7j1rDwvd9RKVaJ7PjkJQHJKQBq3s3LBzcM178ICW9MSX1Q1IByUKfyUKUh35aemVM/mRp1+DRMRFGo8ms9EL6AkZOYaXUZl55RxzDqB64H4QGc+cwcxbloU98dyewKHfotC1E1TCZ2O+GA0KF5aJH+igYVIK7/Ac9+vnnA5c57PDsNhCW47AlX5PTXdY0l+3yJXmlQlZrsaHZMdZVm5wad5sBWd0jX7ri6eGOL9TnHijzwuAQAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;3&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/fb8a0/3.png&quot;
+        srcset=&quot;https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/1a291/3.png 148w,https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/2bc4a/3.png 295w,https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/fb8a0/3.png 590w,https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/526de/3.png 885w,https://heara.in/static/386be42f9d383e2a513877e36aa95b7d/7bc9a/3.png 1178w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h2 id=&quot;解决方案&quot;&gt;&lt;a href=&quot;#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;我们尝试了各种方案，但是&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;和&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;的宽度比例都不知道，我们得出结论这个方案不可行，只能请产品修改方案，&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;和&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;同时伸缩。后来&lt;strong&gt;qfish&lt;/strong&gt;同学提出了一个非常牛逼的想法: 在&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;和&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;外面在加一层容器，同时设置&lt;code class=&quot;language-text&quot;&gt;flex-wrap: wrap&lt;/code&gt;就可以实现我们想要的效果, 原理如下:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;css&quot;&gt;&lt;pre class=&quot;language-css&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token selector&quot;&gt;#D&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;flex-wrap&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; wrap&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 50px&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;overflow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; hidden&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;flex-grow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 1&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;由于设置了&lt;code class=&quot;language-text&quot;&gt;flex-wrap: wrap&lt;/code&gt;，当&lt;code class=&quot;language-text&quot;&gt;D&lt;/code&gt;容器放不下&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;时，&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;就会折行，跑到下一行，然而…，由于&lt;code class=&quot;language-text&quot;&gt;overflow: hidden&lt;/code&gt;，我们没有办法看到它，也就是说&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;是存在的，只不过我们看不到而已，而且&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;是定高的，不会影响整体布局。&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/9a45b/4.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 48.9795918367347%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAACGklEQVQoz3WQ30tTYRjH3zCVypQSSq9KiP6WbiUvu6iLoDuJEIN+QMRKcoy1TbeV20pdNrUCCcuQ/cJtOTtjW4PS1Dyks0gjsIvKc86nd56t7Ndz+PB8eb7P+7zvc4SqqkSmUkylFeLTConUNJlwmHQkRjoaYyYS3dIzWzpmalmr6EwkTC48SXbyGS9TCURYms3dCju9nxCedQ7bC7RdDVHVu8Ye1zK7XSuSIrVOk5Iu1eqkV9XzkTbrI/znz2K9fAnfjS7EVCJJo2eZ6hDUDkOTb43jrihiCMSgJCgZgAbp1Q+bulTbMWj6rf4UXrcD+00HQy6HOXCfZ4Ua2VwtOeBbp9UZ/Tmowl7p1VUG9pcvGoGTtjHGz53BYbNxr8dprnyo+zl1nvfscq9y1J7lxLX7NPet0uJdouWWSpNbpd6xRIPjLY3ud+z3r3HQPs+x9iC20+14LnZy3WIh0GVBFItFFEUhn8+RzeV4lc8y8TRGZ3+cC/0xOu7GGXsS4006SSGToTA5QabrCqrTyofHo+RTSfLJBIV4lDnlBYJ/xOiquVqN/K8iAMGiLH79DPkMjD+EhVn+F0LXdTRNIvM3mUEntKgj7ugceaAhfAaB19+h4xQbI0HMDons1zXNzNv49ULDYFM3tuTAgoHwSvySXrg9q8nqpvzKrbpWPmL8xW8rl+ehfoHAvFx1EfrmDBY2yr58QenQ9mF/xg/P0X+O6zrDBAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;4&quot;
+        title=&quot;&quot;
+        src=&quot;https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/fb8a0/4.png&quot;
+        srcset=&quot;https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/1a291/4.png 148w,https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/2bc4a/4.png 295w,https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/fb8a0/4.png 590w,https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/526de/4.png 885w,https://heara.in/static/3c65e46236fe2abc91ce66f4d61b4bf3/9a45b/4.png 1078w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;在明白背后的原理后，我不由得觉得&lt;strong&gt;qfish&lt;/strong&gt;同学脑子很灵活，也庆幸自己又学会了一招，也验证了一个真理:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CSS技巧是学不完的！— 鲁迅&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;局限性&quot;&gt;&lt;a href=&quot;#%E5%B1%80%E9%99%90%E6%80%A7&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;局限性&lt;/h2&gt;
+&lt;p&gt;以上解决方案只限于整体高度固定，如果无法确定&lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;、&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;、&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;最大高度，就无法通过设置D的高度来来隐藏&lt;code class=&quot;language-text&quot;&gt;C&lt;/code&gt;，因而无法实现想要的效果。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;转念一想，或许可以通过设置&lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;的&lt;code class=&quot;language-text&quot;&gt;margin-bottom:9999px&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;D&lt;/code&gt;的&lt;code class=&quot;language-text&quot;&gt;margin-bottom: -9999px&lt;/code&gt;,待验证…&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;收获&quot;&gt;&lt;a href=&quot;#%E6%94%B6%E8%8E%B7&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;收获&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;还是要多交流，往往你觉得真的不行了的时候，其实还是有路可以走的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;多做，多积累，不要等到书到用时方恨少，&lt;strong&gt;qfish&lt;/strong&gt;同学能想到这个方案，一定有着过人的积累&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+                &lt;div style=&quot;margin-top=55px; font-style: italic;&quot;&gt;(This is an article posted to my blog at overreacted.io. You can read it online by &lt;a href=&quot;https://heara.in/a-little-trick-when-using-flex-wrap/&quot;&gt;clicking here&lt;/a&gt;.)&lt;/div&gt;
+              </content:encoded></item><item><title><![CDATA[搭建Node.js本地https服务]]></title><link>https://heara.in/nodejs-localhost-https/</link><guid isPermaLink="false">https://heara.in/nodejs-localhost-https/</guid><pubDate>Fri, 03 May 2019 15:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;https相对http有着更好的安全性，越来越多的网站开始使用https服务正是出于安全方面的考虑。在我们日常开发时，有时也会需要搭建本地https服务，本文介绍采用Node.js搭建https服务的过程，希望对读者有所帮助。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&quot;我，ca，打钱&quot;&gt;&lt;a href=&quot;#%E6%88%91%EF%BC%8Cca%EF%BC%8C%E6%89%93%E9%92%B1&quot; aria-hidden class=&quot;anchor&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;我，CA，打钱&lt;/h2&gt;
