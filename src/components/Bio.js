@@ -1,5 +1,5 @@
 import React from 'react';
-import profilePic from '../assets/profile-pic.png';
+import profilePic from '../assets/avatar.jpg';
 import { rhythm } from '../utils/typography';
 
 class Bio extends React.Component {
