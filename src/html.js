@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const scriptText = `
+(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: "ca-pub-6361564278528956",
+  enable_page_level_ads: true
+});
+`;
+
 export default class HTML extends React.Component {
   render() {
     return (
@@ -13,6 +20,15 @@ export default class HTML extends React.Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
           {this.props.headComponents}
+          <script
+            src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+            async="true"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: scriptText,
+            }}
+          />
         </head>
         <body {...this.props.bodyAttributes} className="light">
           <script
