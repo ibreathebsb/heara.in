@@ -32,6 +32,10 @@ class Calc extends React.Component {
   render() {
     return (
       <main style={main}>
+        <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async="true"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: scriptText
+        }}></script>
         <iframe
           src="https://wsdb.xyz/calc/en"
           style={frameStyle}
@@ -51,7 +55,7 @@ class Calc extends React.Component {
     body.appendChild(script2);
   }
   componentDidMount() {
-    this.addScripts()
+    // this.addScripts()
   }
 }
 
